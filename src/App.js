@@ -5,7 +5,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                What eat
+                What eat, 
             </div>
         );
     }
