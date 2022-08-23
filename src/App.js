@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
+import Index from "./Dainty/index";
+import Test from './Dainty/test';
 import './App.css';
 
 class App extends Component {
+
     render() {
-        return (
+        return (            
             <div className="App">
-                What eat, 
+                <Index />
             </div>
         );
     }
+
 }
 
 export default App;

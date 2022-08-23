@@ -1,0 +1,37 @@
+#edit{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.list_dainties{
+    background-color: darkmagenta;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 40px;
+    text-align: center;
+    width: 50%;
+}
+
+.dainty_item{
+    width: 150px;
+    padding: 3px 6px;
+    margin: 10px;
+    border: 1px solid salmon;
+}
+
+.action{
+    width: 50%;
+    background-color: red;
+    display: flex;
+    justify-content: center;
+}
+
+label{
+    margin: 0 10px;
+    padding: 10px;
+}
+
+input[type="radio"]:checked + label{ 
+    background-color: red;
+}

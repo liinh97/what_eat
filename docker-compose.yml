@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+    what-eat:
+        container_name: react
+        stdin_open: true
+        build:
+            context: "./docker"
+            dockerfile: Dockerfile
+        volumes:
+            - "./:/app"
+        ports:
+            - "3000:3000"
+        environment:
+            - CHOKIDA_USEPOLLING=true
+
