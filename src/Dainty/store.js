@@ -1,22 +1,31 @@
-import React, { useContext, useEffect, useState } from "react";
-import { store } from "../Firebase/firebase-repo";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { store, update } from "../Firebase/firebase-repo";
 import "./style/store.css";
+
+const ShowContext = createContext();
 
 export default function Store(props) {
 
     const [name, setName] = useState('');
     const [categoryId, setCategoryId] = useState(0);
     const [favotire, setFavorite] = useState(false);
+    const { show, setShow } = useContext(ShowContext);
 
     const handleSubmit = () => {
-        store('dainty', {name, favotire, category_id: categoryId, img: ''}).then( res => {
-            console.log(res);
-        });
+
+        setShow(false);
+
+        if(props.edit_id){
+            update('dainty', props.edit_id, {name, favotire, category_id: categoryId, img: ''});
+            return;
+        }
+
+        store('dainty', {name, favotire, category_id: categoryId, img: ''});
     }
 
     return (
 
-        <div id="store">
+        <div id="store" style={{display: show ? "block" : "none"}}>
             <input type="text" onChange={(e) => setName(e.target.value)} value={name} />
             <div className="list_categories">
                 {props.data.map((e, i) => {
@@ -34,7 +43,7 @@ export default function Store(props) {
             <button className={'favorite_box ' + (favotire ? 'enable' : 'disable')}
                 onClick={() => setFavorite(favotire ? false : true)}
                 >favorite</button>
-            <button id="btn_store" onClick={() => handleSubmit()}>Store</button>
+            <button id="btn_store" onClick={() => handleSubmit()}>{props.edit_id ? "Edit" : "Store"}</button>
         </div>
 
     );

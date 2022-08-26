@@ -44,7 +44,7 @@ export default function Edit(props){
                 >Delete</label>
             </div>
             <ShowContext.Provider value={{show, setShow}}>
-                {show ? action == 'edit' ? <Store data={props.data.category} /> : <DeleteItem data={daintyId} /> : ''}
+                {show ? action == 'edit' ? <Store data={props.data.category} edit_id={daintyId} /> : <DeleteItem edit_id={daintyId} /> : ''}
             </ShowContext.Provider>
         </div>
 
@@ -57,13 +57,14 @@ const DeleteItem = (props) => {
     const { show, setShow } = useContext(ShowContext);
 
     const handleDelete = id => {
-        destroy('dainty', id).then( res => {console.log(res)});
+        destroy('dainty', id);
+        setShow(false);
     }
 
     return (
 
         <div style={{display: show ? "block" : "none"}}>
-            <button onClick={() => handleDelete(props.data)}>Confirm</button>
+            <button onClick={() => handleDelete(props.edit_id)}>Confirm</button>
             <button onClick={() => setShow(false)}>Cancel</button>
         </div>
 
