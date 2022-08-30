@@ -9,11 +9,8 @@ export default function Store(props) {
     const [name, setName] = useState('');
     const [categoryId, setCategoryId] = useState(0);
     const [favotire, setFavorite] = useState(false);
-    const { show, setShow } = useContext(ShowContext);
 
     const handleSubmit = () => {
-
-        setShow(false);
 
         if(props.edit_id){
             update('dainty', props.edit_id, {name, favotire, category_id: categoryId, img: ''});
@@ -25,7 +22,7 @@ export default function Store(props) {
 
     return (
 
-        <div id="store" style={{display: show ? "block" : "none"}}>
+        <div id="store">
             <input type="text" onChange={(e) => setName(e.target.value)} value={name} />
             <div className="list_categories">
                 {props.data.map((e, i) => {

@@ -55,7 +55,7 @@ export default function Index(){
                 <div className="scroll_area">
                     {today}
                 </div>
-                {/* <button id="btn_start" className={action ? 'down' : ''} onClick={() => randomDainty()}>Start</button> */}
+                <button id="btn_start" className={action ? 'down' : ''} onClick={() => randomDainty()}>Start</button>
             </div>
             <CategoryContext.Provider value={{categoryId, setCategoryId}}>
                 <Categories data={category} />
@@ -69,10 +69,8 @@ export default function Index(){
                     onClick={() => setOption(option === 'edit' ? '' : 'edit')}
                     >edit</button>
             </div>
-            {/* <Store data={category} /> */}
             <CategoryContext.Provider value={{categoryId, setCategoryId}}>
-                <Edit data={{dainty, category}} />
-            {option === 'store' ? <Store data={category} /> : option === 'edit' ? <Edit data={{dainty, category}} /> : ''}
+                {option === 'store' ? <Store data={category} /> : option === 'edit' ? <Edit data={{dainty, category}} /> : ''}
             </CategoryContext.Provider>
         </div>
 
