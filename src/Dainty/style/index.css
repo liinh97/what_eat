@@ -95,3 +95,15 @@
 .active{
     background-color: red;
 }
+
+.animation {
+    animation: moveSlideshow .1s linear infinite;
+}
+
+@keyframes moveSlideshow {
+
+    100% { 
+        transform: translateX(-100px);  
+    }
+
+}
