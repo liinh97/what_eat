@@ -5,7 +5,7 @@ import "./style/index.css";
 import Categories from "../Components/categories";
 import CategoryContext from "../Context/CategoryContext";
 import { col, snapshotAll, store } from "../Firebase/firebase-repo";
-import { query, where } from "firebase/firestore";
+import { orderBy, query, where } from "firebase/firestore";
 
 export default function Index(){
 
@@ -29,20 +29,21 @@ export default function Index(){
         });
 
         let q = 'dainty';
-        if(favorite){
-            q = query(col('dainty'), where('favorite', '==', true));
-        }
+        if(favorite) q = query(col('dainty'), where('favorite', '==', true));
         snapshotAll(q, res => {
             const dainties = [];
             res.forEach(e => dainties.push({id: e.id, ...e.data()}));
             setDainty(dainties);
         });
 
-        snapshotAll('history', res => {
+        const q2 = query(col('history'), orderBy('date', 'desc'));
+        snapshotAll(q2, res => {
             const histories = [];
             res.forEach(e => histories.push(e.data()));
             setHistory(histories);
         });
+        
+        // setToday('Bánh Mì');
 
     }, [favorite]);
 
@@ -63,10 +64,21 @@ export default function Index(){
     }, [categoryId]);
 
     useEffect(() => {
-        const newArr = [];
+        let newArr = [];
         dainty.forEach( e => {
             newArr.push(e.name);
         });
+        let count = newArr.length;
+        if(count > 0){
+            while(count < 7){
+                newArr = newArr.concat(newArr);
+                count = newArr.length;
+            }
+
+            if(count % 2 == 0){
+                newArr.push('Again');
+            }
+        }
         setArr(newArr);
     }, [dainty]);
 
@@ -75,7 +87,6 @@ export default function Index(){
 
     const randomDainty = () => {
 
-        const delay = 2000;
         setArr(arr.sort(() => Math.random() - 0.5));
         setActive(active ? false : true);
         
@@ -103,16 +114,21 @@ export default function Index(){
 
             setToday(arr[1]);
             
-        }, delay);
+        }, 2500);
     }
 
     return (
     
         <div id="index">
             <div className="center_box">
-                <div className={today == null ? "" : "today_box_show" + 'today_box'}>{today}</div>
+                <div className={today == null ? "none" : "today_box_show"}>
+                    <p style={{marginTop: "70px"}}>Eat</p>
+                    <b style={{margin: "15px 0"}}>{ today !== null ? today.toUpperCase() : today }</b>
+                    <p>for today!</p>
+                    <button style={{marginTop: "100px", padding: "15px 60px"}} onClick={() => setToday(null)}>Go eat</button>
+                </div>
                 <div className="scroll_area">
-                    <ul style={{display: active ? "flex" : "none", width: "400px", overflow: "hidden", backgroundColor: "gray"}}>
+                    <ul className={(active ? 'now' : 'hidden')}>
                         {
                             arr.map( (e, i) => <li className={active ? 'animation' : ''} key={i}>{e}</li>)
                         }
