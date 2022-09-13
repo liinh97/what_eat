@@ -1,23 +1,21 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { store, update } from "../Firebase/firebase-repo";
 import "./style/store.css";
-
-const ShowContext = createContext();
 
 export default function Store(props) {
 
     const [name, setName] = useState('');
     const [categoryId, setCategoryId] = useState(0);
-    const [favotire, setFavorite] = useState(false);
+    const [favorite, setFavorite] = useState(false);
 
     const handleSubmit = () => {
 
         if(props.edit_id){
-            update('dainty', props.edit_id, {name, favotire, category_id: categoryId, img: ''});
+            update('dainty', props.edit_id, {name, favorite, category_id: categoryId, img: ''});
             return;
         }
 
-        store('dainty', {name, favotire, category_id: categoryId, img: ''});
+        store('dainty', {name, favorite, category_id: categoryId, img: ''});
     }
 
     return (
@@ -37,8 +35,8 @@ export default function Store(props) {
                     </div>
                 )})}
             </div>
-            <button className={'favorite_box ' + (favotire ? 'enable' : 'disable')}
-                onClick={() => setFavorite(favotire ? false : true)}
+            <button className={'favorite_box ' + (favorite ? 'enable' : 'disable')}
+                onClick={() => setFavorite(favorite ? false : true)}
                 >favorite</button>
             <button id="btn_store" onClick={() => handleSubmit()}>{props.edit_id ? "Edit" : "Store"}</button>
         </div>

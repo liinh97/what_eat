@@ -17,13 +17,19 @@ function checkArr(id, categoryId){
 export default function Categories(props) {
 
     const [category, setCategory] = useState([]);
-    const { categoryId, setCategoryId } = useContext(CategoryContext);
+    const { categoryId, setCategoryId, favorite, setFavorite } = useContext(CategoryContext);
 
     useEffect(() => {
         setCategory(props.data);
     }, [props.data]);
 
     const handleClickBtn = (id, index) => {
+
+        if(id === 'favorite'){
+            setFavorite(favorite ? false : true);
+            return;
+        }
+
         const newIds = checkArr(id, categoryId);
         setCategoryId(newIds);
 
@@ -43,6 +49,11 @@ export default function Categories(props) {
                     </button>
                 )
             })}
+            <button
+                onClick={() => handleClickBtn('favorite', 1)}
+                className={'btn_category ' + (favorite ? 'active' : '')}
+                >favorite
+            </button>
         </div>
     );
 

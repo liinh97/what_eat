@@ -4,21 +4,21 @@ import Edit from "./edit";
 import "./style/index.css";
 import Categories from "../Components/categories";
 import CategoryContext from "../Context/CategoryContext";
-import { col, snapshotAll } from "../Firebase/firebase-repo";
+import { col, snapshotAll, store } from "../Firebase/firebase-repo";
 import { query, where } from "firebase/firestore";
-
-function handleRandom(arr){
-    return Math.floor(Math.random() * arr.length);
-}
 
 export default function Index(){
 
     const [today, setToday] = useState(null);
+    const [arr, setArr] = useState([]);
+    const [active, setActive] = useState(false);
     const [option, setOption] = useState(null);
     const [action, setAction] = useState(false);
     const [categoryId, setCategoryId] = useState([]);
     const [category, setCategory] = useState([]);
     const [dainty, setDainty] = useState([]);
+    const [history, setHistory] = useState([]);
+    const [favorite, setFavorite] = useState(false);
 
     useEffect(() => {
 
@@ -28,13 +28,23 @@ export default function Index(){
             setCategory(categories);
         });
 
-        snapshotAll('dainty', res => {
+        let q = 'dainty';
+        if(favorite){
+            q = query(col('dainty'), where('favorite', '==', true));
+        }
+        snapshotAll(q, res => {
             const dainties = [];
             res.forEach(e => dainties.push({id: e.id, ...e.data()}));
             setDainty(dainties);
         });
 
-    }, []);
+        snapshotAll('history', res => {
+            const histories = [];
+            res.forEach(e => histories.push(e.data()));
+            setHistory(histories);
+        });
+
+    }, [favorite]);
 
     useEffect(() => {
 
@@ -60,8 +70,8 @@ export default function Index(){
         setArr(newArr);
     }, [dainty]);
 
-    const [arr, setArr] = useState([]);
-    const [active, setActive] = useState(false);
+    useEffect(() => {
+    }, [history]);
 
     const randomDainty = () => {
 
@@ -70,36 +80,47 @@ export default function Index(){
         setActive(active ? false : true);
         
         setTimeout(() => {
+
             setActive(false);
+
+            if(arr[1] == undefined){
+                return;
+            }
+
+            const dataHistory = {
+                dainty: arr[1],
+                date: new Date().toLocaleDateString("en", {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric'
+                })
+            }
+
+            store('history', dataHistory);
+
+            setToday(arr[1]);
+            
         }, delay);
-
-
-        // let result;
-        // if(!categoryId.length){
-        //     const random = handleRandom(dainty);
-        //     result = dainty[random].name;
-        // }else{
-        //     const newDainty = dainty.filter(e => categoryId.includes(e.category_id));
-        //     const random = handleRandom(newDainty);
-        //     result = newDainty[random].name;
-        // }
-        // setToday(result);
     }
 
     return (
     
         <div id="index">
             <div className="center_box">
+                <div className={today == null ? "" : "today_box_show" + 'today_box'}>{today}</div>
                 <div className="scroll_area">
-                    <ul style={{display: "flex", width: "400px", overflow: "hidden", backgroundColor: "gray"}}>
+                    <ul style={{display: active ? "flex" : "none", width: "400px", overflow: "hidden", backgroundColor: "gray"}}>
                         {
-                            arr.map( (e, i) => <li className={active ? 'animation' : ''} style={{listStyleType: "none", margin: "10px", border: "1px solid red"}} key={i}>{e}</li>)
+                            arr.map( (e, i) => <li className={active ? 'animation' : ''} key={i}>{e}</li>)
                         }
                     </ul>
                 </div>
                 <button id="btn_start" className={action ? 'down' : ''} onClick={() => randomDainty()}>Start</button>
             </div>
-            <CategoryContext.Provider value={{categoryId, setCategoryId}}>
+            <CategoryContext.Provider value={{categoryId, setCategoryId, favorite, setFavorite}}>
                 <Categories data={category} />
             </CategoryContext.Provider>
             <button id="btn_option" onClick={() => setAction(action ? false : true)}>Options</button>
