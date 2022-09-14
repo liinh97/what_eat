@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Index from "./Dainty/index";
 import Test from './Dainty/test';
-import './App.css';
+import './App.scss';
 
 class App extends Component {
 
@@ -9,6 +9,28 @@ class App extends Component {
         return (            
             <div className="App">
                 <Index />
+                <div className="background">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         );
     }
