@@ -29,6 +29,8 @@
     font-size: 1.5rem;
     font-weight: bold;
     transition: 1s;
+    cursor: pointer;
+    z-index: 1000;
 }
 
 .category_box{
